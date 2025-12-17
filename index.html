@@ -3,119 +3,100 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gear Inventory Manager</title>
+  <title>GearOps Manager</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app-container">
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-      <h1>GearOps Manager</h1>
-      <nav>
-        <button data-tab="dashboard" class="active">Dashboard</button>
-        <button data-tab="inventory">Inventory</button>
-        <button data-tab="jobs">Jobs</button>
-        <button data-tab="history">History</button>
-      </nav>
-    </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-      <!-- DASHBOARD -->
-      <section id="dashboard" class="tab-section active">
-        <h2>Dashboard</h2>
-        <div class="filter-container">
-          <label>Filter by Category:
-            <select id="filter-category">
-              <option>All</option>
-              <option>Audio</option>
-              <option>Video</option>
-              <option>Lighting</option>
-            </select>
-          </label>
-        </div>
-        <div id="inventory-dashboard" class="inventory-grid"></div>
-      </section>
+<header>
+  <h1 id="app-title">GearOps Manager</h1>
+  <nav>
+    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+    <button class="tab-btn" data-tab="inventory">Inventory</button>
+    <button class="tab-btn" data-tab="jobs">Jobs</button>
+    <button class="tab-btn" data-tab="history">Checkout History</button>
+  </nav>
+</header>
 
-      <!-- INVENTORY -->
-      <section id="inventory" class="tab-section">
-        <h2>Inventory List</h2>
-        <div id="item-list-container"></div>
-        <button id="add-item-btn" class="primary-btn">Add Item</button>
-      </section>
-
-      <!-- JOBS -->
-      <section id="jobs" class="tab-section">
-        <h2>Jobs</h2>
-        <button id="new-job-btn" class="primary-btn">New Job</button>
-        <div class="jobs-table-container">
-          <h3>Active Jobs</h3>
-          <div id="jobs-list"></div>
-        </div>
-        <div class="jobs-table-container">
-          <h3>Archived Jobs</h3>
-          <div id="archived-jobs-list"></div>
-        </div>
-      </section>
-
-      <!-- HISTORY -->
-      <section id="history" class="tab-section">
-        <h2>Checkout / Checkin History</h2>
-        <div id="history-list"></div>
-      </section>
-    </main>
-  </div>
-
-  <!-- ITEM MODAL -->
-  <div id="item-modal" class="modal">
-    <div class="modal-content">
-      <h2>Add / Edit Item</h2>
-      <form id="item-form">
-        <label>Category: 
-          <select id="item-category">
-            <option>Audio</option>
-            <option>Video</option>
-            <option>Lighting</option>
-          </select>
-        </label>
-        <label>Gear Item: <input type="text" id="item-gear" required></label>
-        <label>Shop Number: <input type="text" id="item-shop" required></label>
-        <label>Group Name: <input type="text" id="item-group"></label>
-        <label>Serial Number: <input type="text" id="item-serial"></label>
-        <label>Condition: <input type="text" id="item-condition"></label>
-        <label>Value (USD): <input type="number" id="item-value" min="0"></label>
-        <div class="modal-buttons">
-          <button type="submit" class="primary-btn">Save Item</button>
-          <button type="button" class="secondary-btn" onclick="closeItemModal()">Cancel</button>
-        </div>
-      </form>
+<!-- DASHBOARD -->
+<section id="dashboard" class="tab-section active">
+  <div class="dashboard-panels">
+    <div class="active-jobs-panel">
+      <h2>Active Jobs</h2>
+      <div id="active-jobs-list"></div>
+    </div>
+    <div class="calendar-panel">
+      <h2>Job Calendar</h2>
+      <div id="job-calendar"></div>
+    </div>
+    <div class="team-reminders-panel">
+      <h2>Team Reminders</h2>
+      <div id="reminders-list"></div>
+      <input type="text" id="reminder-input" placeholder="New reminder">
+      <button onclick="addReminder()">Add</button>
     </div>
   </div>
+</section>
 
-  <!-- JOB MODAL -->
-  <div id="job-modal" class="modal">
-    <div class="modal-content">
-      <h2>New / Edit Job</h2>
-      <form id="job-form">
-        <label>Job Name: <input type="text" id="job-name" required></label>
-        <label>Client Name: <input type="text" id="client-name"></label>
-        <label>Phone Number: <input type="text" id="client-phone"></label>
-        <label>Point of Contact: <input type="text" id="client-contact"></label>
-        <label>Email: <input type="email" id="client-email"></label>
-        <label>Billing Address: <input type="text" id="client-billing"></label>
-        <label>Venue Location: <input type="text" id="job-venue"></label>
-        <label>Job Date: <input type="date" id="job-date"></label>
-        <label>Notes: <textarea id="job-notes"></textarea></label>
-        <h3>Assign Items</h3>
-        <div id="job-items-list" class="items-checkbox-list"></div>
-        <div class="modal-buttons">
-          <button type="submit" class="primary-btn">Save Job</button>
-          <button type="button" class="secondary-btn" onclick="closeJobModal()">Cancel</button>
-        </div>
-      </form>
-    </div>
+<!-- INVENTORY -->
+<section id="inventory" class="tab-section">
+  <div id="inventory-mode-toggle">
+    <button onclick="setInventoryMode('view')">View Mode</button>
+    <button onclick="setInventoryMode('inventory')">Inventory Mode</button>
+    <button onclick="openAddItem()">Add New Item</button>
   </div>
+  <div id="inventory-dashboard" class="table-container"></div>
+</section>
 
-  <script src="script.js"></script>
+<!-- JOBS -->
+<section id="jobs" class="tab-section">
+  <button onclick="openAddJob()">New Job</button>
+  <div id="jobs-list"></div>
+</section>
+
+<!-- HISTORY -->
+<section id="history" class="tab-section">
+  <div id="history-list"></div>
+</section>
+
+<!-- ITEM MODAL -->
+<div id="item-modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeItemModal()">&times;</span>
+    <h2 id="item-modal-title">Add/Edit Item</h2>
+    <form id="item-form">
+      <input id="item-category" placeholder="Category" required>
+      <input id="item-gear" placeholder="Gear Item" required>
+      <input id="item-group" placeholder="Group Name">
+      <input id="item-shop" placeholder="Shop Number">
+      <input id="item-serial" placeholder="Serial Number">
+      <input id="item-condition" placeholder="Condition">
+      <input id="item-value" placeholder="Value (USD)">
+      <button type="submit">Save</button>
+    </form>
+  </div>
+</div>
+
+<!-- JOB MODAL -->
+<div id="job-modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeJobModal()">&times;</span>
+    <h2 id="job-modal-title">New Job</h2>
+    <form id="job-form">
+      <input id="job-name" placeholder="Job Name" required>
+      <input id="job-client" placeholder="Client Name">
+      <input id="job-phone" placeholder="Phone">
+      <input id="job-email" placeholder="Email">
+      <input id="job-poc" placeholder="Point of Contact">
+      <input id="job-billing" placeholder="Billing Address">
+      <input id="job-venue" placeholder="Venue">
+      <input id="job-date" type="date" required>
+      <div id="job-items-list"></div>
+      <button type="submit">Save Job</button>
+    </form>
+  </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
